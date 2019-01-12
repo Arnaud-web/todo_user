@@ -6,6 +6,8 @@ class User < ApplicationRecord
 	has_secure_token :confirmation_token
 
 	after_save :avatar_after_upload
+	after_destroy_commit :avatar_destroy
+	before_save :avatar_before_upload
 
 	validates :username, 
 	format: {with: /\A[a-zA-Z0-9_]{2,20}\z/, message: 'ne doit contenir que des caractères alphanumérique ou de _ '},
@@ -23,13 +25,39 @@ class User < ApplicationRecord
 		{id: id}
 	end
 
+	def avatar_path
+		File.join(
+		Rails.public_path, self.class.name.downcase.pluralize,
+		id.to_s,
+		'avatar.jpg'
+		)
+	end
+
+	def avatar_url
+
+		'/' + [self.class.name.downcase.pluralize,
+		id.to_s,
+		'avatar.jpg'].join('/')
+
+	end
+
+	
+	private
+
+	def avatar_before_upload
+
+		if avatar_file.respond_to? :path
+			self.avatar = true
+		end
+	
+	end
+
+
+
+
 	def avatar_after_upload
 		
-		path = File.join(
-			Rails.public_path, self.class.name.downcase.pluralize,
-			id.to_s,
-			'avatar.jpg'
-			)
+		path = avatar_path
 	
 		if avatar_file.respond_to? :path
 
@@ -44,6 +72,12 @@ class User < ApplicationRecord
 			image.format 'jpg'
 			image.write path
 		end
+	end
+
+
+	def avatar_destroy
+		dir = File.dirname(avatar_path)
+		FileUtils.rm_r(dir) if Dir.exist?(dir)
 	end
 
 
