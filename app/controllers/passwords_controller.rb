@@ -8,15 +8,19 @@ class PasswordsController < ApplicationController
     end
 
     def create
-        user_params = user_params.require(:user)
+        user_params = params.require(:user)
         @user = User.find_by_email(user_params[:email])
 
         if @user
  
             @user.regenerate_recover_password
+            UserMailer.password(@user).deliver_now
+            redirect_to new_session_path, success: 'Un email vous a été envoyé'
 
         else
             redirect_to new_password_path, danger: 'Aucun utilisateur ne correspond à cet email'
+        end
+
     end
 
 
