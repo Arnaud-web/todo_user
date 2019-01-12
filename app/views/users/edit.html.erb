@@ -1,0 +1,73 @@
+<% if @user.errors.any? %>
+
+<div class="alert alert-danger">
+	<ul>
+		<% @user.errors.full_messages.each do |message| %>
+		<li><%= message %></li>
+		<% end %>
+	</ul>
+</div>
+
+<% end %>
+
+
+
+
+
+
+
+
+
+<div class="panel panel-default" >
+	<div class="panel-heading" > S'inscrire </div>
+	<div class="panel-body">
+		<%= form_for @user,url: profil_path , html:{class: 'form-horizontal' } do |f| %>
+
+		<div class="form-group">
+			<%= f.label :avatar, "Avatar", class: 'col-md-4 control-label'%>
+			<div >
+				<%= f.file_field :avatar_file, class: ' form-horizontal' %>
+			</div>
+		</div>
+
+
+
+		<div class="form-group">
+			<%= f.label :username, "Nom d'utilisateur", class: 'col-md-4 control-label'%>
+			<div >
+				<%= f.text_field :username, class: ' form-horizontal' %>
+			</div>
+		</div> 
+		<div class="form-group">
+			<%= f.label :firstname, "Prénom", class: 'col-md-4 control-label'%>
+			<div >
+				<%= f.text_field :firstname, class: ' form-horizontal' %>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<%= f.label :lastname, "Nom", class: 'col-md-4 control-label'%>
+			<div >
+				<%= f.text_field :lastname, class: ' form-horizontal' %>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<%= f.label "Email",class: 'col-md-4 control-label'%>
+			<div >
+				<%= f.email_field :email, class: ' form-horizontal' %>
+			</div>
+		</div>
+
+		
+		<div class="form-group">
+			<div class="col-md-offset-4 col-md-4 ">
+				<button type="submit" class="btn btn-primary"> S'inscrire</button>
+				
+			</div>
+		</div>
+
+		<% end %>
+	</div>
+
+</div>
